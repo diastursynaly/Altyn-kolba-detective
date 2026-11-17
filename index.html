@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>«Алтын колба» ісі</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* Layout: бір бағанды іс қағазы; айғақ нөмірлері — оқиға орнындағы сары белгілер */
+  --bg:#e6ecea; --paper:#f8faf9; --ink:#14212b; --muted:#566771; --line:#c3cecb;
+  --tag:#f2c230; --on-tag:#14212b; --stamp:#bf3529; --ok:#1c7450;
+  --display:"Unbounded","Golos Text",system-ui,sans-serif;
+  --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e161b; --paper:#17222a; --ink:#e6edf0; --muted:#93a4ad; --line:#2c3b44;
+    --tag:#f2c230; --on-tag:#14212b; --stamp:#ff7163; --ok:#56c796; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e161b; --paper:#17222a; --ink:#e6edf0; --muted:#93a4ad; --line:#2c3b44;
+  --tag:#f2c230; --on-tag:#14212b; --stamp:#ff7163; --ok:#56c796; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:44px 44px;background-attachment:fixed}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 64px;display:flex;flex-direction:column;gap:16px}
+.top{position:sticky;top:0;z-index:5;margin:0 -16px}
+header.bar{background:var(--ink);color:var(--paper);padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.bar .case{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;opacity:.8;flex:1;min-width:110px}
+.bar .stat{font-family:var(--mono);font-weight:600;font-variant-numeric:tabular-nums;font-size:15px}
+.bar .stat small{font-weight:400;opacity:.7;font-size:11px;margin-right:4px}
+.bar .late{color:var(--tag)}
+nav.tabs{display:none;background:var(--paper);border-bottom:1px solid var(--line)}
+nav.tabs.on{display:flex}
+nav.tabs button{flex:1;background:none;border:0;border-bottom:3px solid transparent;padding:10px 4px;font-weight:600;font-size:14px;color:var(--muted)}
+nav.tabs button[aria-current="true"]{color:var(--ink);border-bottom-color:var(--tag)}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--tag);outline-offset:2px}
+.refbtn{background:var(--tag);color:var(--on-tag);border:0;border-radius:3px;padding:6px 10px;font-weight:600;font-size:14px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(28px,7vw,44px);line-height:1.1;margin:20px 0 0;text-wrap:balance;letter-spacing:-.01em}
+h2{font-family:var(--display);font-weight:500;font-size:19px;line-height:1.25;margin:0;text-wrap:balance}
+h3{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:600}
+p{margin:0}
+.lead{font-size:17px}
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.marker{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;background:var(--tag);color:var(--on-tag);
+  font-family:var(--display);font-weight:700;font-size:20px;clip-path:polygon(12% 0,88% 0,100% 100%,0 100%);flex:none}
+.chead{display:flex;gap:14px;align-items:center}
+.topic{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.board{display:flex;flex-direction:column;gap:8px}
+.board button{display:flex;gap:12px;align-items:center;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:4px;padding:10px 12px;width:100%}
+.board button:hover{border-color:var(--ink)}
+.board .tx{flex:1;min-width:0}
+.board b{display:block}
+.pill{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.04em;padding:2px 6px;border-radius:2px;border:1.5px solid var(--line);color:var(--muted);white-space:nowrap}
+.pill.has{border-color:var(--ok);color:var(--ok)}
+.pill.bad{border-color:var(--stamp);color:var(--stamp)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:7px 10px 7px 0;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.n,.n{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:500}
+td.n{white-space:nowrap}
+.eq{font-family:var(--mono);background:var(--bg);border-left:4px solid var(--tag);padding:8px 12px;font-size:15px;overflow-x:auto;white-space:nowrap}
+.q{font-weight:600;font-size:17px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts button{background:var(--paper);border:1.5px solid var(--ink);border-radius:3px;padding:10px 14px;text-align:left;font-weight:500}
+.opts button[aria-pressed="true"]{background:var(--tag);color:var(--on-tag);border-color:var(--tag)}
+.numrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+input[type=text],textarea{font:inherit;background:var(--paper);color:var(--ink);border:1.5px solid var(--ink);border-radius:3px;padding:10px 12px}
+input.num{font-family:var(--mono);width:140px}
+textarea{width:100%;min-height:72px;resize:vertical;font-size:15px}
+.go{background:var(--ink);color:var(--paper);border:0;border-radius:3px;padding:12px 18px;font-weight:600}
+.go.big{font-family:var(--display);font-size:16px;padding:16px 22px;align-self:flex-start;background:var(--tag);color:var(--on-tag)}
+.go:disabled{opacity:.4;cursor:default}
+.ghost{background:none;border:1.5px solid var(--ink);border-radius:3px;padding:8px 12px;font-weight:600;font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+.fb{border-left:4px solid var(--stamp);padding:8px 12px;background:var(--bg);font-size:15px}
+.fb.ok{border-color:var(--ok)}
+.fb.tip{border-color:var(--tag)}
+.fb b{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;display:block}
+.sol{font-family:var(--mono);font-size:14px;line-height:1.7}
+hr{border:0;border-top:1px dashed var(--line);margin:0;width:100%}
+ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.card{position:relative}
+.card.out h2{text-decoration:line-through;opacity:.55}
+.card.out::after,.card.hot::after{position:absolute;right:12px;top:14px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.06em;
+  border:1.5px solid;padding:1px 5px;transform:rotate(-6deg);border-radius:2px;background:var(--paper)}
+.card.out::after{content:"АҚТАЛДЫ";color:var(--ok)}
+.card.hot::after{content:"КҮДІКТІ";color:var(--stamp)}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px}
+dt{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+dd{margin:0}
+.seg{display:flex;gap:0}
+.seg button{flex:1;background:var(--paper);border:1.5px solid var(--ink);padding:6px 4px;font-size:13px;font-weight:600;margin-left:-1.5px}
+.seg button:first-child{margin-left:0;border-radius:3px 0 0 3px}
+.seg button:last-child{border-radius:0 3px 3px 0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.res{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.res div{border-top:3px solid var(--ink);padding-top:8px}
+.res small{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block}
+.res span{font-family:var(--display);font-weight:700;font-size:24px;font-variant-numeric:tabular-nums}
+.verdict{font-family:var(--display);font-weight:700;color:var(--stamp);border:3px solid var(--stamp);padding:6px 12px;transform:rotate(-3deg);align-self:flex-start;letter-spacing:.04em}
+#ref{position:fixed;inset:0;z-index:10;background:rgba(10,16,20,.6);display:none;align-items:flex-end;justify-content:center}
+#ref.open{display:flex}
+#ref .panel{background:var(--paper);color:var(--ink);width:100%;max-width:720px;max-height:88%;overflow-y:auto;padding:20px;border-radius:8px 8px 0 0;display:flex;flex-direction:column;gap:14px}
+#ref .hd{display:flex;justify-content:space-between;align-items:center;gap:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <header class="bar">
+      <span class="case">Іс № 14-11</span>
+      <span class="stat"><small>УАҚЫТ</small><span id="timer">40:00</span></span>
+      <span class="stat"><small>ЖАУАП</small><span id="cnt">0/8</span></span>
+      <button class="refbtn" id="openRef" type="button">Анықтама</button>
+    </header>
+    <nav class="tabs" id="tabs">
+      <button type="button" data-go="board">Айғақтар</button>
+      <button type="button" data-go="sus">Күдіктілер</button>
+      <button type="button" data-go="acc">Айыптау</button>
+    </nav>
+  </div>
+  <main id="app" class="wrap" style="padding:0"></main>
+</div>
+
+<div id="ref" role="dialog" aria-modal="true" aria-labelledby="refT">
+  <div class="panel">
+    <div class="hd"><h2 id="refT">Тергеушінің анықтамалығы</h2><button class="ghost" id="closeRef" type="button">Жабу</button></div>
+    <h3>Салыстырмалы атомдық массалар</h3>
+    <div class="tw"><table><tr><td class="n">H 1</td><td class="n">C 12</td><td class="n">N 14</td><td class="n">O 16</td><td class="n">F 19</td><td class="n">Na 23</td><td class="n">S 32</td></tr>
+    <tr><td class="n">Cl 35,5</td><td class="n">K 39</td><td class="n">Fe 56</td><td class="n">Cu 64</td><td class="n">Ag 108</td><td class="n">Ba 137</td><td></td></tr></table></div>
+    <h3>Формулалар</h3>
+    <div class="sol">
+      n = m / M &nbsp;·&nbsp; n = V / 22,4 (газ, қ.ж.)<br>
+      ω = m(зат) / m(ерітінді)<br>
+      C = n / V(ерітінді, л)<br>
+      ω(элемент) = n · A<sub>r</sub> / M<sub>r</sub><br>
+      M = 2 · D(H<sub>2</sub>)<br>
+      x : y : z = ω(C)/12 : ω(H)/1 : ω(O)/16<br>
+      Вант-Гофф: v<sub>2</sub> = v<sub>1</sub> · γ<sup>(t₂ − t₁)/10</sup><br>
+      Жылдамдық неше есе артса, реакция уақыты сонша есе қысқарады.
+    </div>
+    <h3>Жалын түсі</h3>
+    <div class="tw"><table><tr><th>Ион</th><th>Түсі</th></tr>
+      <tr><td class="n">Na<sup>+</sup></td><td>сары</td></tr>
+      <tr><td class="n">K<sup>+</sup></td><td>күлгін</td></tr>
+      <tr><td class="n">Ca<sup>2+</sup></td><td>кірпіш қызыл</td></tr>
+      <tr><td class="n">Ba<sup>2+</sup></td><td>сарғыш жасыл</td></tr>
+      <tr><td class="n">Cu<sup>2+</sup></td><td>жасыл</td></tr></table></div>
+    <h3>Аниондарды анықтау</h3>
+    <div class="tw"><table><tr><th>Ион</th><th>Реактив</th><th>Белгісі</th></tr>
+      <tr><td class="n">Cl<sup>−</sup></td><td class="n">AgNO<sub>3</sub></td><td>ақ ірімшік тәрізді тұнба AgCl</td></tr>
+      <tr><td class="n">SO<sub>4</sub><sup>2−</sup></td><td class="n">BaCl<sub>2</sub></td><td>ақ тұнба BaSO<sub>4</sub>, қышқылдарда ерімейді</td></tr>
+      <tr><td class="n">CO<sub>3</sub><sup>2−</sup></td><td class="n">HCl</td><td>түссіз газ CO<sub>2</sub>; BaCl<sub>2</sub>-мен түскен ақ тұнба қышқылда ериді</td></tr>
+      <tr><td class="n">NO<sub>3</sub><sup>−</sup></td><td>—</td><td>бұл реактивтермен тұнба да, газ да бермейді</td></tr></table></div>
+    <h3>Органикалық заттар</h3>
+    <ul>
+      <li>Альдегидтер күміс айна реакциясын береді, кетондар бермейді.</li>
+      <li>Спирттер мен карбон қышқылдары натриймен әрекеттесіп, сутек бөледі. Кетондар бөлмейді.</li>
+    </ul>
+    <h3>Полимерлер</h3>
+    <div class="tw"><table><tr><th>Мономер</th><th>Полимер</th></tr>
+      <tr><td>этилен <span class="n">C<sub>2</sub>H<sub>4</sub></span></td><td>полиэтилен</td></tr>
+      <tr><td>винилхлорид <span class="n">C<sub>2</sub>H<sub>3</sub>Cl</span></td><td>поливинилхлорид (винил, ПВХ)</td></tr>
+      <tr><td>изопрен <span class="n">C<sub>5</sub>H<sub>8</sub></span></td><td>табиғи каучук (латекс)</td></tr>
+      <tr><td>хлоропрен <span class="n">C<sub>4</sub>H<sub>5</sub>Cl</span></td><td>хлоропрен каучугі (неопрен)</td></tr>
+      <tr><td>тетрафторэтилен <span class="n">C<sub>2</sub>F<sub>4</sub></span></td><td>тефлон</td></tr></table></div>
+    <h3>Тотығу-тотықсыздану</h3>
+    <ul><li>Коэффициенттер электрондық баланс әдісімен қойылады: берілген электрондар саны қабылданғанға тең.</li></ul>
+  </div>
+</div>
+
+<script>
+const M='<span class="n">',E='</span>';
+const SUS=[
+ {id:'dana',name:'Дана',role:'11-сынып оқушысы',motive:'Олимпиадада бір ұпай жетпей, екінші орын алды.',
+  acid:'50 г, 20%-дық (титрлеу жаттығуына)',alibi:'21:30–22:00 кітапханада кітапханашымен бірге болған. Одан кейін жалғыз.',
+  salts:M+'Na<sub>2</sub>CO<sub>3</sub>'+E+' (сусыз, титрлеуге)',solv:'қолданбайды',glove:'латекс',locker:'шкафы жоқ'},
+ {id:'arman',name:'Арман',role:'лаборант',motive:'Кубокты өзі жасатқан, бірақ еңбегі аталмады.',
+  acid:'120 г, 10%-дық (ерітінді дайындауға)',alibi:'22:30–22:50 мұғалімдер бөлмесінен бейнеқоңырауда болған, жазбасы бар.',
+  salts:M+'K<sub>2</sub>SO<sub>4</sub>, Na<sub>2</sub>SO<sub>4</sub>, CuSO<sub>4</sub>'+E+' (реактив әзірлеген)',solv:'ацетон (ыдыс шаюға)',glove:'неопрен (хлоропрен каучугі)',locker:'№ 14'},
+ {id:'timur',name:'Тимур аға',role:'түнгі күзетші',motive:'Кубоктың алтын жалатылғанын біледі.',
+  acid:'75 г, 20%-дық (есік топсасының тотын кетіруге)',alibi:'22:20–22:35 кіреберіс камерасында: курьерден сәлемдеме қабылдаған.',
+  salts:M+'NaCl'+E+' (баспалдақтағы мұзға сепкен)',solv:'қолданбайды',glove:'мақта (целлюлоза)',locker:'№ 7'},
+ {id:'aigerim',name:'Айгерім',role:'практикант-мұғалім',motive:'Келісімшарты ұзартылмады.',
+  acid:'80 г, 20%-дық (зертханалық жұмысқа)',alibi:'21:55–22:10 асхана камерасында шай ішіп отыр. Одан кейін «кабинетте дәптер тексердім» дейді.',
+  salts:M+'K<sub>2</sub>SO<sub>4</sub>, BaCl<sub>2</sub>'+E+' (зертханалық жұмыс әзірлеген)',solv:'ацетон (лак кетіргіш)',glove:'винил (поливинилхлорид)',locker:'№ 10'},
+ {id:'bekzat',name:'Бекзат',role:'шаруашылық меңгерушісі',motive:'Бұрын химия мұғалімі болған, қызметі төмендетілген.',
+  acid:'150 г, 10%-дық (шәйнектің қағын тазалауға)',alibi:'Куә жоқ: «кеш бойы қоймада түгендеу жасадым» дейді.',
+  salts:M+'K<sub>2</sub>SO<sub>4</sub>, KNO<sub>3</sub>'+E+' (жылыжай тыңайтқыштары)',solv:'ацетон (бояу ерітуге)',glove:'винил (поливинилхлорид)',locker:'№ 16'},
+ {id:'saule',name:'Сәуле апай',role:'химия мұғалімі',motive:'Кубоктың мектеп мұражайына емес, басқа лицейге берілетініне қарсы.',
+  acid:'45 г, 36%-дық (көрнекі тәжірибеге)',alibi:'20:40–21:00 ата-аналармен онлайн жиналыс өткізген. Одан кейін жалғыз.',
+  salts:M+'KCl, K<sub>2</sub>CO<sub>3</sub>'+E+' (сабаққа)',solv:'этанол (спирт шамына)',glove:'латекс',locker:'№ 20'}
+];
+const CULPRIT='aigerim',LIMIT=2400;
+const EV=[
+{t:'Еріген құлып',topic:'Газдың молярлық көлемі · стехиометрия',
+ story:'Сейф сындырылмаған. Оның болат тілшесін біреу тұз қышқылымен ерітіп үзген (қышқылда тек темір еріген). Сейф ішіндегі газ датчигі бөлінген сутектің көлемін тіркеген: 4,48 л (қ.ж.). Қоймадан үш түрлі концентрациядағы тұз қышқылы беріледі; кім қандайын және қаншасын алғаны «Күдіктілер» бөлімінде.',
+ data:'<div class="eq">Fe + 2HCl → FeCl<sub>2</sub> + H<sub>2</sub>↑</div>',
+ q:'Реакцияға неше грамм таза хлорсутек (HCl) жұмсалған?',kind:'num',ans:14.6,tol:0.15,unit:'г',
+ hint:'Сутектің зат мөлшерінен HCl мөлшерін тап. Сосын әр күдіктінің ерітіндісіндегі таза HCl массасын (m · ω) осы санмен салыстыр.',
+ sol:'n(H<sub>2</sub>) = 4,48 / 22,4 = 0,2 моль<br>n(HCl) = 0,4 моль; m(HCl) = 0,4 · 36,5 = 14,6 г<br>Күдіктілердегі таза HCl: Дана 10 г, Арман 12 г, Тимур 15 г, Айгерім 16 г, Бекзат 15 г, Сәуле 16,2 г',
+ concl:'Дана мен Арманның қышқылы жетпейді. Арманның 120 грамы көп көрінгенімен, ол 10%-дық.'},
+{t:'Қылмыс уақыты',topic:'Химиялық кинетика · Вант-Гофф ережесі',
+ story:'Сейф датчигі тілше үзілген сәтті 22:40 деп тіркеген. Сарапшы тәжірибе жасады: дәл осындай тілше 20 °C-та сол қышқылда 108 минутта үзіледі. Бірақ сол түні зертхананың жылуы реттелмей, термометр 40 °C көрсетіп тұрған. Реакцияның температуралық коэффициенті γ = 3. Қышқылды құйған адам ұрының өзі.',
+ data:'',q:'Қышқыл құлыпқа сағат нешеде құйылған?',kind:'opt',opts:['20:52','22:04','22:22','22:28','22:34'],ans:3,
+ hint:'Температура 20 °C-қа көтерілсе, жылдамдық γ-ға көбейтілмейді: γ-ның дәрежесін есепте.',
+ sol:'v₂ / v₁ = 3<sup>(40 − 20)/10</sup> = 3² = 9<br>t = 108 / 9 = 12 мин<br>22:40 − 12 мин = 22:28',
+ concl:'22:28-де тек Тимур ағаның алибиі бар (камера, 22:20–22:35). Арманның қоңырауы 22:30-да ғана басталған.'},
+{t:'Тұтқадағы ақ кристалдар',topic:'Сапалық реакциялар · жалын түсі',
+ story:'Сейф тұтқасынан ұрының қолғабынан түскен ақ кристалдар табылды. Сарапшы оларды суда ерітіп, төрт сынама жасады.',
+ data:'<div class="tw"><table><tr><th>Сынама</th><th>Нәтиже</th></tr><tr><td>Жалынға енгізу</td><td>жалын күлгін түске боялды</td></tr><tr><td class="n">+ BaCl<sub>2</sub></td><td>ақ тұнба түсті, азот қышқылында ерімеді</td></tr><tr><td class="n">+ AgNO<sub>3</sub></td><td>ірімшік тәрізді тұнба түзілмеді</td></tr><tr><td class="n">+ HCl</td><td>газ бөлінбеді</td></tr></table></div>',
+ q:'Кристалдар қандай зат?',kind:'opt',opts:['NaCl','KCl','Na<sub>2</sub>SO<sub>4</sub>','K<sub>2</sub>SO<sub>4</sub>','K<sub>2</sub>CO<sub>3</sub>','KNO<sub>3</sub>','Na<sub>2</sub>CO<sub>3</sub>'],ans:3,
+ hint:'Жалын түсі катионды көрсетеді. BaCl₂-мен түскен тұнбаның қышқылда еру-ерімеуі анионды ажыратады.',
+ sol:'Күлгін жалын → K<sup>+</sup><br>Ba<sup>2+</sup> + SO<sub>4</sub><sup>2−</sup> → BaSO<sub>4</sub>↓ (қышқылда ерімейді)<br>AgCl жоқ → Cl<sup>−</sup> жоқ; газ жоқ → CO<sub>3</sub><sup>2−</sup> жоқ<br>Зат: K<sub>2</sub>SO<sub>4</sub>',
+ concl:'Калий сульфатын Арман, Айгерім, Бекзат ұстаған. Дана, Тимур аға, Сәуле апай ұстамаған.'},
+{t:'Еріткіш сіңген шүберек',topic:'Органикалық заттың формуласын табу',
+ story:'Қоқыс жәшігінен өткір иісті сұйықтық сіңген шүберек табылды: ұры саусақ іздерін сүрткен. Сұйықтықтың құрамы: ω(C) = 62,07%, ω(H) = 10,34%, ω(O) = 27,59%. Буының сутек бойынша тығыздығы 29. Зат күміс айна реакциясын бермейді, натриймен сутек бөлмейді.',
+ data:'',q:'Шүберектегі зат қайсысы?',kind:'opt',
+ opts:['Этанол C<sub>2</sub>H<sub>5</sub>OH','Пропаналь C<sub>2</sub>H<sub>5</sub>CHO','Ацетон CH<sub>3</sub>COCH<sub>3</sub>','Пропанол-2 CH<sub>3</sub>CH(OH)CH<sub>3</sub>','Аллил спирті CH<sub>2</sub>=CH–CH<sub>2</sub>OH','Сірке қышқылы CH<sub>3</sub>COOH'],ans:2,
+ hint:'M = 2 · 29. Осы молярлық массаға бірнеше изомер сәйкес келеді: оларды екі сынама ажыратады.',
+ sol:'M = 2 · 29 = 58 г/моль<br>C : H : O = 62,07/12 : 10,34/1 : 27,59/16 = 3 : 6 : 1 → C<sub>3</sub>H<sub>6</sub>O<br>Күміс айна жоқ → пропаналь емес<br>Na-мен сутек жоқ → аллил спирті емес<br>Зат: ацетон',
+ concl:'Ацетонды Арман, Айгерім, Бекзат қолданады. Сәуле апайда тек этанол.'},
+{t:'Жапсырмасыз құты',topic:'Бейтараптану · молярлық концентрация',
+ story:'Сол қоқыс жәшігінен жапсырмасы жыртылған құты шықты, саусақ іздері сол еріткішпен сүртілген. Түбінде аздап қышқыл қалған. Оның 3,65 г сынамасын толық бейтараптауға 0,5 моль/л NaOH ерітіндісінің 40 мл-і жұмсалды.',
+ data:'<div class="eq">HCl + NaOH → NaCl + H<sub>2</sub>O</div>',
+ q:'Құтыдағы қышқылда HCl-дың массалық үлесі неше пайыз?',kind:'num',ans:20,tol:0.5,unit:'%',
+ hint:'n(NaOH) = C · V (литрмен). Сонша моль HCl сынамада болған.',
+ sol:'n(NaOH) = 0,5 · 0,04 = 0,02 моль = n(HCl)<br>m(HCl) = 0,02 · 36,5 = 0,73 г<br>ω = 0,73 / 3,65 = 0,20 = 20%',
+ concl:'Ұры 20%-дық қышқыл қолданған. Оны Дана, Тимур аға, Айгерім алған. Бекзат пен Арманда 10%-дық, Сәуле апайда 36%-дық.'},
+{t:'Еденде ақ ұнтақ',topic:'Кристаллогидраттар',
+ story:'Сейф алдындағы еденде ақ ұнтақтың ізі жатыр. Сарапшы оның натрий карбонатының кристаллогидраты екенін анықтады. 5,72 г ұнтақты қыздырғанда 2,12 г сусыз тұз қалды. Мектепте соданың екі түрі бар: зертханада титрлеуге арналған сусыз сода және еден жуушының кристалды содасы. Еден жуушы 18:00-де үйіне кеткен, ғимаратқа қайта кірмеген.',
+ data:'<div class="eq">Na<sub>2</sub>CO<sub>3</sub>·xH<sub>2</sub>O → Na<sub>2</sub>CO<sub>3</sub> + xH<sub>2</sub>O</div>',
+ q:'Кристаллогидрат формуласындағы x нешеге тең?',kind:'num',ans:10,tol:0.01,unit:'',
+ hint:'Массаның кемуі буланған судың массасы. Су мен сусыз тұздың зат мөлшерлерінің қатынасын тап.',
+ sol:'m(H<sub>2</sub>O) = 5,72 − 2,12 = 3,6 г; n = 0,2 моль<br>n(Na<sub>2</sub>CO<sub>3</sub>) = 2,12 / 106 = 0,02 моль<br>x = 0,2 / 0,02 = 10',
+ concl:'Бұл еден жуушының кристалды содасы, ол кешке дейін төгілген. Дананың сусыз содасына қатысы жоқ: жалған із.'},
+{t:'Қолғаптың жыртындысы',topic:'Полимерлер · элементтің массалық үлесі',
+ story:'Сейф есігінің қырына қолғаптың кішкене жыртындысы ілініп қалған. Сарапшы полимердің құрамын анықтады: ω(C) = 38,4%, ω(H) = 4,8%, ω(Cl) = 56,8%.',
+ data:'',q:'Бұл полимер қай мономерден алынған?',kind:'opt',
+ opts:['Этилен C<sub>2</sub>H<sub>4</sub>','Винилхлорид C<sub>2</sub>H<sub>3</sub>Cl','Изопрен C<sub>5</sub>H<sub>8</sub>','Хлоропрен C<sub>4</sub>H<sub>5</sub>Cl','Тетрафторэтилен C<sub>2</sub>F<sub>4</sub>'],ans:1,
+ hint:'Хлоры бар мономер екеу. Әрқайсысындағы хлордың массалық үлесін есептеп, салыстыр.',
+ sol:'C : H : Cl = 38,4/12 : 4,8/1 : 56,8/35,5 = 3,2 : 4,8 : 1,6 = 2 : 3 : 1<br>C<sub>2</sub>H<sub>3</sub>Cl, винилхлорид → поливинилхлорид<br>Хлоропренде ω(Cl) = 35,5 / 88,5 = 40,1%',
+ concl:'Винил қолғапты Айгерім мен Бекзат киеді. Арманның неопрен қолғабында да хлор бар, бірақ үлесі басқа.'},
+{t:'Түсіп қалған жазба',topic:'Тотығу-тотықсыздану · электрондық баланс',
+ story:'Зертхана табалдырығынан ұрының қалтасынан түскен қағаз табылды: «Кубок шкафта. Нөмірі мыс пен концентрлі азот қышқылы реакциясындағы барлық коэффициенттердің қосындысына тең». Қызметкерлер шкафтарының кілті вахтада ілулі тұрады, сондықтан кез келген қызметкер кез келген шкафты аша алады.',
+ data:'<div class="eq">Cu + HNO<sub>3</sub>(конц.) → Cu(NO<sub>3</sub>)<sub>2</sub> + NO<sub>2</sub>↑ + H<sub>2</sub>O</div>',
+ q:'Шкафтың нөмірі нешеу?',kind:'num',ans:10,tol:0.01,unit:'',
+ hint:'Cu⁰ екі электрон береді, N⁺⁵ бір электрон қабылдайды. Тұз түзуге кеткен HNO₃ молекулаларын да ұмытпа.',
+ sol:'Cu<sup>0</sup> − 2e → Cu<sup>+2</sup> | 1<br>N<sup>+5</sup> + 1e → N<sup>+4</sup> | 2<br>Cu + 4HNO<sub>3</sub> → Cu(NO<sub>3</sub>)<sub>2</sub> + 2NO<sub>2</sub>↑ + 2H<sub>2</sub>O<br>1 + 4 + 1 + 2 + 2 = 10',
+ concl:'№ 10 шкаф Айгерімдікі. Жалғыз өзі дәлел емес, бірақ қалған айғақтармен сәйкес келеді.'}
+];
+
+const fresh=()=>({view:'intro',ev:0,ans:{},notes:{},marks:{},memo:'',hints:[],wrongAcc:0,pick:'',msg:'',start:0,end:0,name:'',solved:false});
+let S=fresh();
+const app=document.getElementById('app'),$=id=>document.getElementById(id);
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const has=i=>S.ans[i]!==undefined&&S.ans[i]!=='';
+const right=i=>{const e=EV[i];if(!has(i))return false;
+  if(e.kind==='opt')return +S.ans[i]===e.ans;
+  const v=parseFloat(String(S.ans[i]).replace(',','.'));return !isNaN(v)&&Math.abs(v-e.ans)<=e.tol};
+const nAns=()=>EV.filter((e,i)=>has(i)).length,nRight=()=>EV.filter((e,i)=>right(i)).length;
+const shown=i=>EV[i].kind==='opt'?EV[i].opts[S.ans[i]]:esc(S.ans[i])+(EV[i].unit?' '+EV[i].unit:'');
+const score=()=>Math.max(0,nRight()*10+(S.solved?20:0)-S.wrongAcc*10-S.hints.length*3);
+
+function fmt(sec){const s=Math.abs(sec);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function tick(){
+  const t=$('timer');
+  if(!S.start){t.textContent=fmt(LIMIT);return}
+  const el=Math.floor(((S.end||Date.now())-S.start)/1000),left=LIMIT-el;
+  t.textContent=left>=0?fmt(left):'+'+fmt(left);t.className=left<0?'late':'';
+}
+setInterval(tick,1000);
+
+function vIntro(){
+  return '<h1>«Алтын колба» ісі</h1>'+
+  '<p class="lead">Жұма, түн. Химия лицейінің үшінші қабатындағы зертханадан республикалық олимпиаданың бас жүлдесі, алтын жалатылған «Алтын колба» кубогы жоғалды. Сол кеште ғимаратта алты адам болған. Сен тергеушісің.</p>'+
+  '<div class="sheet"><h3>Күдіктілер</h3><div class="tw"><table><tr><th>Кім</th><th>Қызметі</th><th>Себебі болуы мүмкін</th></tr>'+
+  SUS.map(s=>'<tr><td><b>'+s.name+'</b></td><td>'+s.role+'</td><td>'+s.motive+'</td></tr>').join('')+'</table></div></div>'+
+  '<div class="sheet"><h3>Ереже</h3><ul>'+
+  '<li>Сегіз айғақ бар. Оларды кез келген ретпен зертте, кез келген уақытта қайта оралып, жауабыңды өзгерте аласың.</li>'+
+  '<li>Жауабыңның дұрыс-бұрысын ешкім айтпайды. Қате есеп қате адамға апарады.</li>'+
+  '<li>Айғақтың бәрі бірдей ұрыға қатысты емес: жалған із де кездеседі.</li>'+
+  '<li>«Күдіктілер» бөлімінде әр адамның дерегі бар. Айғақ нәтижесін сол дерекпен өзің салыстырып, кімді ақтайтыныңды өзің шеш.</li>'+
+  '<li>Сегіз айғаққа жауап жазған соң ұрыны айыпта. Қате айыптау 10 ұпай, әр кеңес 3 ұпай алады.</li>'+
+  '<li>Уақыт: 40 минут. Дәптер мен калькулятор қолдануға болады.</li></ul>'+
+  '<label for="nm"><h3>Тергеушінің аты-жөні</h3></label><input type="text" id="nm" data-k="name" style="width:100%;max-width:320px" autocomplete="off" value="'+esc(S.name)+'">'+
+  '<button class="go big" data-act="start" type="button">Тергеуді бастау</button></div>';
+}
+function vBoard(){
+  const flag=S.wrongAcc>=2;
+  return '<div class="board">'+EV.map((e,i)=>'<button type="button" data-ev="'+i+'"><span class="marker">'+(i+1)+'</span><span class="tx"><b>'+e.t+'</b><span class="topic">'+e.topic+'</span></span>'+
+    (has(i)?(flag&&!right(i)?'<span class="pill bad">қайта тексер</span>':'<span class="pill has">'+shown(i)+'</span>'):'<span class="pill">жауап жоқ</span>')+'</button>').join('')+'</div>'+
+    '<p class="topic">Айғақты ашу үшін үстінен бас. Жауаптар сақталады, оларды кейін өзгертуге болады.</p>';
+}
+function vEv(){
+  const i=S.ev,e=EV[i],hinted=S.hints.includes(i);
+  let h='<div class="row"><button class="ghost" data-go="board" type="button">← Айғақтар тізімі</button><button class="ghost" data-go="sus" type="button">Күдіктілер дерегі</button></div>'+
+   '<div class="sheet"><div class="chead"><span class="marker">'+(i+1)+'</span><div><h2>'+e.t+'</h2><div class="topic">'+e.topic+'</div></div></div>'+
+   '<p>'+e.story+'</p>'+e.data+'<hr><p class="q">'+e.q+'</p>';
+  if(e.kind==='num')h+='<div class="numrow"><input class="num" type="text" id="ans" data-k="ans" inputmode="decimal" autocomplete="off" aria-label="Жауап" value="'+esc(S.ans[i])+'"><span>'+e.unit+'</span></div>';
+  else h+='<div class="opts">'+e.opts.map((o,j)=>'<button type="button" data-a="'+j+'" aria-pressed="'+(has(i)&&+S.ans[i]===j)+'">'+o+'</button>').join('')+'</div>';
+  h+=hinted?'<div class="fb tip"><b>Кеңес</b>'+e.hint+'</div>':'<button class="ghost" data-act="hint" type="button" style="align-self:flex-start">Кеңес алу (−3 ұпай)</button>';
+  h+='<hr><label for="note"><h3>Менің қорытындым: бұл айғақ кімді ақтайды, кімге күдік түсіреді?</h3></label>'+
+   '<textarea id="note" data-k="note">'+esc(S.notes[i])+'</textarea>'+
+   '<div class="row"><button class="ghost" data-ev="'+((i+7)%8)+'" type="button">← Алдыңғы</button><button class="ghost" data-ev="'+((i+1)%8)+'" type="button">Келесі →</button></div></div>';
+  return h;
+}
+function vSus(){
+  return '<p class="topic">Әр адамға өз белгіңді қой. Белгілер тек сенің дәптерің: ойын оларды тексермейді.</p>'+
+  SUS.map(s=>{const m=S.marks[s.id]||'';
+   return '<div class="sheet card '+(m==='out'?'out':m==='hot'?'hot':'')+'"><div><h2>'+s.name+'</h2><div class="topic">'+s.role+'</div></div>'+
+   '<dl><dt>Қышқыл</dt><dd>'+s.acid+'</dd><dt>Алиби</dt><dd>'+s.alibi+'</dd><dt>Тұздар</dt><dd>'+s.salts+'</dd><dt>Еріткіш</dt><dd>'+s.solv+'</dd><dt>Қолғап</dt><dd>'+s.glove+'</dd><dt>Шкаф</dt><dd>'+s.locker+'</dd></dl>'+
+   '<div class="seg" role="group" aria-label="Белгі">'+[['','Белгісіз'],['hot','Күдікті'],['out','Ақталды']].map(o=>'<button type="button" data-mark="'+s.id+'" data-v="'+o[0]+'" aria-pressed="'+(m===o[0])+'">'+o[1]+'</button>').join('')+'</div></div>'}).join('')+
+  '<div class="sheet"><label for="memo"><h3>Қойын дәптер</h3></label><textarea id="memo" data-k="memo" style="min-height:120px">'+esc(S.memo)+'</textarea></div>';
+}
+function vAcc(){
+  const n=nAns(),ready=n===8;
+  let h='<div class="sheet"><h2>Айыптау</h2>';
+  if(!ready)h+='<p>Айыптау үшін сегіз айғақтың бәріне жауап жаз. Қазір жазылғаны: <b>'+n+' / 8</b>.</p><button class="go" data-go="board" type="button" style="align-self:flex-start">Айғақтарға оралу</button>';
+  else{
+    h+='<p>«Алтын колбаны» кім ұрлады? Ұры барлық шынайы айғаққа бір мезгілде сәйкес келуі тиіс.</p><div class="opts">'+
+     SUS.map(s=>'<button type="button" data-pick="'+s.id+'" aria-pressed="'+(S.pick===s.id)+'">'+s.name+', '+s.role+'</button>').join('')+'</div>'+
+     '<button class="go" data-act="accuse" type="button" '+(S.pick?'':'disabled')+' style="align-self:flex-start">Айыптауды растау</button>';
+  }
+  if(S.msg)h+='<div class="fb" role="status"><b>Айыптау дәлелденбеді · −10 ұпай</b>'+S.msg+'</div>';
+  if(S.wrongAcc>=3)h+='<button class="ghost" data-act="giveup" type="button" style="align-self:flex-start">Шешімін көрсету</button>';
+  return h+'</div>';
+}
+function vEnd(){
+  const el=Math.floor((S.end-S.start)/1000),sc=score();
+  const rank=!S.solved?'Іс басқа тергеушіге берілді':sc>=90?'Бас тергеуші':sc>=70?'Аға детектив':sc>=50?'Детектив':'Тергеуші көмекшісі';
+  return '<h1>Іс жабылды</h1><div class="sheet"><span class="verdict">ҰРЫ: АЙГЕРІМ</span>'+
+   '<p>'+(S.name?'<b>'+esc(S.name)+'</b>: ':'')+'<b>'+rank+'</b>'+(el>LIMIT?'. Уақыттан '+fmt(el-LIMIT)+' асып кетті.':'.')+'</p>'+
+   '<div class="res"><div><small>Ұпай</small><span>'+sc+'</span></div><div><small>Уақыт</small><span>'+fmt(el)+'</span></div><div><small>Дұрыс жауап</small><span>'+nRight()+'/8</span></div></div>'+
+   '<p class="topic">Қате айыптау: '+S.wrongAcc+' · алынған кеңес: '+S.hints.length+'</p></div>'+
+   EV.map((e,i)=>'<div class="sheet"><div class="chead"><span class="marker">'+(i+1)+'</span><div><h2>'+e.t+'</h2><div class="topic">Сенің жауабың: '+(has(i)?shown(i):'жоқ')+' · '+(right(i)?'дұрыс':'қате')+'</div></div></div>'+
+    '<div class="sol">'+e.sol+'</div><div class="fb ok"><b>Қорытынды</b>'+e.concl+'</div></div>').join('')+
+   '<div class="sheet"><h3>Дәлелдер тізбегі</h3><p>Қышқылы жеткілікті (1), 22:28-де алибиі жоқ (2), калий сульфатын ұстаған (3), ацетон қолданады (4), 20%-дық қышқыл алған (5), винил қолғап киеді (7), шкафы № 10 (8). Осының бәріне тек Айгерім сәйкес келеді. Бекзат бір-ақ жерден сүрінеді: оның қышқылы 10%-дық.</p>'+
+   '<p>Айгерім мойындады: келісімшарты ұзартылмағанына өкпелеп, кубокты жасырып қоймақ болған. «Алтын колба» жеңімпазға қайтарылды.</p>'+
+   '<button class="go" data-act="again" type="button" style="align-self:flex-start">Қайта ойнау</button></div>';
+}
+function render(){
+  tick();$('cnt').textContent=nAns()+'/8';
+  const play=['board','ev','sus','acc'].includes(S.view);
+  $('tabs').classList.toggle('on',play);
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-current',String(b.dataset.go===S.view||(S.view==='ev'&&b.dataset.go==='board'))));
+  app.innerHTML={intro:vIntro,board:vBoard,ev:vEv,sus:vSus,acc:vAcc,end:vEnd}[S.view]();
+}
+function go(v){S.view=v;window.scrollTo(0,0);render()}
+
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b||b.disabled||b.closest('#ref')||b.id==='openRef')return;
+  const d=b.dataset;
+  if(d.go)return go(d.go);
+  if(d.ev!==undefined){S.ev=+d.ev;return go('ev')}
+  if(d.a!==undefined){S.ans[S.ev]=+d.a;return render()}
+  if(d.mark){S.marks[d.mark]=d.v;return render()}
+  if(d.pick){S.pick=d.pick;return render()}
+  if(d.act==='start'){S.start=Date.now();return go('board')}
+  if(d.act==='hint'){if(!S.hints.includes(S.ev))S.hints.push(S.ev);return render()}
+  if(d.act==='accuse'){
+    if(S.pick===CULPRIT){S.solved=true;S.end=Date.now();return go('end')}
+    S.wrongAcc++;const who=SUS.find(s=>s.id===S.pick).name;
+    S.msg=who+' айғақтардың кемінде біреуіне сәйкес келмейді. Сенің 8 жауабыңның '+nRight()+'-і дұрыс.'+
+      (S.wrongAcc>=2?' Қате жауаптар айғақтар тізімінде «қайта тексер» деп белгіленді.':' Есептеулеріңді және дерекпен салыстыруыңды қайта қарап шық.');
+    S.pick='';return render();
+  }
+  if(d.act==='giveup'){S.end=Date.now();return go('end')}
+  if(d.act==='again'){const n=S.name;S=fresh();S.name=n;return go('intro')}
+});
+document.addEventListener('input',e=>{
+  const k=e.target.dataset&&e.target.dataset.k;if(!k)return;
+  const v=e.target.value;
+  if(k==='ans'){S.ans[S.ev]=v.trim();$('cnt').textContent=nAns()+'/8'}
+  else if(k==='note')S.notes[S.ev]=v;
+  else if(k==='memo')S.memo=v;
+  else if(k==='name')S.name=v.trim();
+});
+$('openRef').addEventListener('click',()=>{$('ref').classList.add('open');$('closeRef').focus()});
+$('closeRef').addEventListener('click',()=>$('ref').classList.remove('open'));
+$('ref').addEventListener('click',e=>{if(e.target.id==='ref')$('ref').classList.remove('open')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('ref').classList.remove('open')});
+
+function boot(d){if(d&&d.view&&d.ans)S=Object.assign(fresh(),d);render()}
+window.claude?.hot?.snapshot?.(()=>S);
+if(window.claude?.hot?.ready)window.claude.hot.ready(boot);else boot(window.claude?.hot?.data??{});
+</script>
+</body>
+</html>
